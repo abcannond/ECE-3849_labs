@@ -6,7 +6,7 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.cpp 
+C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.cpp 
 
 OBJS += \
 ./libraries/buttonsDriver/button.obj 
@@ -21,6 +21,6 @@ CPP_DEPS__QUOTED += \
 "libraries\buttonsDriver\button.d" 
 
 CPP_SRCS__QUOTED += \
-"C:/Users/ear-1/OneDrive - Worcester Polytechnic Institute (wpi.edu)/Phd/ECE3849/New Documents/LabsWorspaces/libraries/buttonsDriver/button.cpp" 
+"C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.cpp" 
 
 

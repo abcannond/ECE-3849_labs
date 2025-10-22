@@ -1,6 +1,6 @@
 # FIXED
 
-libraries/pll/sysctl_pll.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/pll/sysctl_pll.c
+libraries/pll/sysctl_pll.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/pll/sysctl_pll.c
 libraries/pll/sysctl_pll.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdbool.h
 libraries/pll/sysctl_pll.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/_ti_config.h
 libraries/pll/sysctl_pll.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/linkage.h
@@ -22,7 +22,7 @@ libraries/pll/sysctl_pll.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/debug.
 libraries/pll/sysctl_pll.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/interrupt.h
 libraries/pll/sysctl_pll.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/pll/sysctl_pll.c:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/pll/sysctl_pll.c:
 
 C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdbool.h:
 

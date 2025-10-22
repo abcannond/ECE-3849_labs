@@ -54,7 +54,7 @@ static Button btnPlayPause(S1);  // S1 → Play/Pause
 static void initializeDisplay(tContext &context);
 static void configureTimer(Timer &timer);
 static void setupButtons();
-static void drawStopwatchScreen(tContext &context, uint32_t currentMs, bool running);
+static void drawStopwatchScreen(tContext &context, uint32_t currentMs, uint32_t currentS, uint32_t currentM, uint32_t currentHr, bool running);
 static void drawButton(tContext &context, const MyButton &btn);
 
 static void onPlayPauseClick();
@@ -116,12 +116,16 @@ int main(void)
         }
 
         // --- Update screen if needed ---
+        uint32_t currentMs = gStopwatchMs % 1000U;
         uint32_t currentSec = gStopwatchMs / 1000U;
+        uint32_t currentMin = currentSec / 60U;
+        uint32_t currentHr = currentMin / 60U;
+
         if ((currentSec != lastDisplayedSec) ||
             (gRunning != lastRunning) ||
             (displayTick >= DISPLAY_REFRESH_MS)) {
 
-            drawStopwatchScreen(sContext, currentSec, gRunning);
+            drawStopwatchScreen(sContext, currentHr, currentMin, currentSec, currentMs, gRunning);
             drawButton(sContext, btnStart);
 
             #ifdef GrFlush
@@ -166,7 +170,7 @@ static void setupButtons()
 // ============================================================================
 // Drawing functions
 // ============================================================================
-static void drawStopwatchScreen(tContext &context, uint32_t currentSec, bool running)
+static void drawStopwatchScreen(tContext &context, uint32_t currentHr, uint32_t currentMin, uint32_t currentSec, uint32_t currentMs, bool running)
 {
     tRectangle rectFull = {0, 0, 127, 127};
     GrContextForegroundSet(&context, ClrBlack);
@@ -177,8 +181,8 @@ static void drawStopwatchScreen(tContext &context, uint32_t currentSec, bool run
     GrStringDrawCentered(&context, "STOPWATCH", -1, 64, 15, false);
 
     // Draw seconds counter centered
-    char str[10];
-    snprintf(str, sizeof(str), "%02u s", currentSec);
+    char str[20];
+    snprintf(str, sizeof(str), "%02u : %02u : %02u : %02u", currentHr, currentMin, currentSec, currentMs);
 
     GrContextForegroundSet(&context, running ? ClrYellow : ClrOlive);
     GrStringDrawCentered(&context, str, -1, 64, 50, false);

@@ -1,7 +1,7 @@
 # FIXED
 
-libraries/joystickDriver/joystick.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/joystickDriver/joystick.cpp
-libraries/joystickDriver/joystick.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/joystickDriver/joystick.h
+libraries/joystickDriver/joystick.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/joystickDriver/joystick.cpp
+libraries/joystickDriver/joystick.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/joystickDriver/joystick.h
 libraries/joystickDriver/joystick.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/stdint.h
 libraries/joystickDriver/joystick.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/__config
 libraries/joystickDriver/joystick.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/__config_site
@@ -34,13 +34,13 @@ libraries/joystickDriver/joystick.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-a
 libraries/joystickDriver/joystick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/adc.h
 libraries/joystickDriver/joystick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h
 libraries/joystickDriver/joystick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h
-libraries/joystickDriver/joystick.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/HAL_TM4C1294/pins.h
+libraries/joystickDriver/joystick.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/HAL_TM4C1294/pins.h
 libraries/joystickDriver/joystick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
-libraries/joystickDriver/joystick.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.h
+libraries/joystickDriver/joystick.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.h
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/joystickDriver/joystick.cpp:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/joystickDriver/joystick.cpp:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/joystickDriver/joystick.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/joystickDriver/joystick.h:
 
 C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/stdint.h:
 
@@ -106,9 +106,9 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/HAL_TM4C1294/pins.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/HAL_TM4C1294/pins.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.h:
 

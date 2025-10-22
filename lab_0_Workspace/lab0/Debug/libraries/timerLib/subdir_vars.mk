@@ -6,7 +6,7 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/timerLib/timerLib.cpp 
+C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.cpp 
 
 OBJS += \
 ./libraries/timerLib/timerLib.obj 
@@ -21,6 +21,6 @@ CPP_DEPS__QUOTED += \
 "libraries\timerLib\timerLib.d" 
 
 CPP_SRCS__QUOTED += \
-"C:/Users/ear-1/OneDrive - Worcester Polytechnic Institute (wpi.edu)/Phd/ECE3849/New Documents/LabsWorspaces/libraries/timerLib/timerLib.cpp" 
+"C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.cpp" 
 
 

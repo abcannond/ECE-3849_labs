@@ -1,7 +1,7 @@
 # FIXED
 
-libraries/buttonsDriver/button.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.cpp
-libraries/buttonsDriver/button.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.h
+libraries/buttonsDriver/button.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.cpp
+libraries/buttonsDriver/button.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.h
 libraries/buttonsDriver/button.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/stdint.h
 libraries/buttonsDriver/button.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/__config
 libraries/buttonsDriver/button.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/__config_site
@@ -19,14 +19,14 @@ libraries/buttonsDriver/button.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_
 libraries/buttonsDriver/button.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/stdbool.h
 libraries/buttonsDriver/button.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdbool.h
 libraries/buttonsDriver/button.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h
-libraries/buttonsDriver/button.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/HAL_TM4C1294/pins.h
+libraries/buttonsDriver/button.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/HAL_TM4C1294/pins.h
 libraries/buttonsDriver/button.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
 libraries/buttonsDriver/button.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/adc.h
 libraries/buttonsDriver/button.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.cpp:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.cpp:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.h:
 
 C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/stdint.h:
 
@@ -62,7 +62,7 @@ C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdbool.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/HAL_TM4C1294/pins.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/HAL_TM4C1294/pins.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h:
 

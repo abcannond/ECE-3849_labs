@@ -25,15 +25,15 @@ main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/interrupt.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/timer.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
-main.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/display/Crystalfontz128x128_ST7735.h
+main.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/display/Crystalfontz128x128_ST7735.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/grlib/grlib.h
-main.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/pll/sysctl_pll.h
-main.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.h
+main.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/pll/sysctl_pll.h
+main.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h
-main.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/HAL_TM4C1294/pins.h
+main.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/HAL_TM4C1294/pins.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/adc.h
-main.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/timerLib/timerLib.h
-main.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/elapsedTime/elapsedTime.h
+main.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.h
+main.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/elapsedTime/elapsedTime.h
 
 ../main.cpp:
 
@@ -85,21 +85,21 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/timer.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/display/Crystalfontz128x128_ST7735.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/display/Crystalfontz128x128_ST7735.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/grlib/grlib.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/pll/sysctl_pll.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/pll/sysctl_pll.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/buttonsDriver/button.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/buttonsDriver/button.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/HAL_TM4C1294/pins.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/HAL_TM4C1294/pins.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/adc.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/timerLib/timerLib.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.h:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/elapsedTime/elapsedTime.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/elapsedTime/elapsedTime.h:
 

@@ -1,7 +1,7 @@
 # FIXED
 
-libraries/timerLib/timerLib.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/timerLib/timerLib.cpp
-libraries/timerLib/timerLib.obj: C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/timerLib/timerLib.h
+libraries/timerLib/timerLib.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.cpp
+libraries/timerLib/timerLib.obj: C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.h
 libraries/timerLib/timerLib.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/stdint.h
 libraries/timerLib/timerLib.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/__config
 libraries/timerLib/timerLib.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/__config_site
@@ -23,9 +23,9 @@ libraries/timerLib/timerLib.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/tim
 libraries/timerLib/timerLib.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
 libraries/timerLib/timerLib.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/timerLib/timerLib.cpp:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.cpp:
 
-C:/Users/ear-1/OneDrive\ -\ Worcester\ Polytechnic\ Institute\ (wpi.edu)/Phd/ECE3849/New\ Documents/LabsWorspaces/libraries/timerLib/timerLib.h:
+C:/Users/abrah/Documents/ECE3849CCS/libraries/timerLib/timerLib.h:
 
 C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/libcxx/stdint.h:
 

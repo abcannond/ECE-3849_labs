@@ -7,5 +7,6 @@
 		<item key="PRODUCT_TYPE" value="sysconfig"/>
 	</section>
 	<section name="com.ti.common.project.ui.internal.preferences.ProductsPreferencePage">
+		<item key="ToolsPreferencePage.BROWSE_FILTER" value="C:\ti\TivaWare_C_Series-2.2.0.295"/>
 	</section>
 </section>
