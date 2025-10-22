@@ -1,0 +1,230 @@
+/**
+ * main.cpp — SimpleGUI Stopwatch Demo
+ *
+ * Cronómetro con botones físicos y GUI animada.
+ * TM4C1294XL + Crystalfontz128x128 LCD
+ *
+ * Edwin A. Rodríguez, 2025
+ */
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdio.h>
+
+extern "C" {
+#include "driverlib/fpu.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/interrupt.h"
+#include "driverlib/timer.h"
+#include "inc/hw_memmap.h"
+#include "Crystalfontz128x128_ST7735.h"
+#include "grlib/grlib.h"
+#include "sysctl_pll.h"
+}
+
+// ===== Librerías C++ =====
+#include "button.h"
+#include "GUI_Button.h"
+#include "timerLib.h"
+#include "elapsedTime.h"
+
+// ===== Configuración global =====
+static constexpr uint32_t BUTTON_TICK_MS      = 20U;
+static constexpr uint32_t DISPLAY_REFRESH_MS  = 50U;
+
+uint32_t gSystemClock = 0;
+volatile uint32_t gStopwatchMs = 0;
+volatile bool gRunning = false;
+
+// ===== Objetos principales =====
+static Button btnStartStop(S1);
+static Button btnReset(S2);
+static GUI_Button guiBtnStart(8, 90, 50, 28, "PLAY");
+static GUI_Button guiBtnReset(70, 90, 50, 28, "RESET");
+
+// ===== Prototipos =====
+static void configureSystemClock();
+static void initializeDisplay(tContext &context);
+static void configureTimer(Timer &timer);
+static void setupButtons();
+static void drawStopwatchScreen(tContext &context, uint32_t currentMs, bool running);
+static void onStartClick();
+static void onResetClick();
+
+int main(void)
+{
+    IntMasterDisable();
+
+    // Habilita FPU
+    FPUEnable();
+    FPULazyStackingEnable();
+
+    configureSystemClock();
+
+    tContext sContext;
+    initializeDisplay(sContext);
+
+    Timer timer;
+    configureTimer(timer);
+
+    elapsedMillis buttonTick(timer);
+    elapsedMillis displayTick(timer);
+    elapsedMillis stopwatchTick(timer);
+
+    setupButtons();
+
+    IntMasterEnable();
+
+    uint32_t lastDisplayedMs = static_cast<uint32_t>(-1);
+    bool lastRunning = !gRunning;
+
+    while (true) {
+        // ===== Poll botones cada 20 ms =====
+        if (buttonTick >= BUTTON_TICK_MS) {
+            btnStartStop.tick();
+            btnReset.tick();
+            buttonTick = 0;
+        }
+
+        // ===== Actualiza GUI =====
+        guiBtnStart.draw(&sContext);
+        guiBtnReset.draw(&sContext);
+
+        // ===== Cronómetro =====
+        if (gRunning) {
+            uint32_t delta = stopwatchTick;
+            if (delta > 0U) {
+                gStopwatchMs += delta;
+                stopwatchTick = 0;
+            }
+        } else {
+            stopwatchTick = 0;
+        }
+
+        // ===== Redibuja pantalla =====
+        bool running = gRunning;
+        uint32_t currentMs = gStopwatchMs;
+        if ((currentMs != lastDisplayedMs) || (running != lastRunning) ||
+            (displayTick >= DISPLAY_REFRESH_MS)) {
+
+            drawStopwatchScreen(sContext, currentMs, running);
+            guiBtnStart.draw(&sContext);
+            guiBtnReset.draw(&sContext);
+
+            // GrFlush solo es necesario si el driver lo soporta
+            #ifdef GrFlush
+            GrFlush(&sContext);
+            #endif
+
+            lastDisplayedMs = currentMs;
+            lastRunning = running;
+            displayTick = 0;
+        }
+    }
+}
+
+// ===== Configuración del sistema =====
+static void configureSystemClock()
+{
+    // Configura PLL a 120 MHz y guarda el valor retornado
+    gSystemClock = SysCtlClockFreqSet(
+        SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN |
+        SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480,
+        120000000);
+}
+
+// ===== Inicialización del LCD =====
+static void initializeDisplay(tContext &context)
+{
+    Crystalfontz128x128_Init();
+    Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
+    GrContextInit(&context, &g_sCrystalfontz128x128);
+    GrContextFontSet(&context, &g_sFontFixed6x8);
+
+    // Limpia la pantalla
+    tRectangle full = {0, 0, 127, 127};
+    GrContextForegroundSet(&context, ClrBlack);
+    GrRectFill(&context, &full);
+    #ifdef GrFlush
+    GrFlush(&context);
+    #endif
+}
+
+// ===== Inicializa el timer base =====
+static void configureTimer(Timer &timer)
+{
+    timer.begin(gSystemClock, TIMER0_BASE);
+}
+
+// ===== Configuración de botones físicos y GUI =====
+static void setupButtons()
+{
+    btnStartStop.begin();
+    btnReset.begin();
+    btnStartStop.setTickIntervalMs(BUTTON_TICK_MS);
+    btnReset.setTickIntervalMs(BUTTON_TICK_MS);
+    btnStartStop.setDebounceMs(30);
+    btnReset.setDebounceMs(30);
+
+    // Tema personalizado
+    static const GUI_CustomTheme myTheme = {
+        0x00E0E0E0, // normal: gris claro
+        0x00A0A0A0, // pressed: gris oscuro
+        0x00000080, // texto: azul oscuro
+        0x00FFFACD, // focused: LemonChiffon
+        0x00008080  // borde focused: teal
+    };
+
+    guiBtnStart.setCustomTheme(myTheme);
+    guiBtnReset.setTheme(GUI_Theme::Red);
+
+    guiBtnStart.attachButton(&btnStartStop);
+    guiBtnReset.attachButton(&btnReset);
+
+    guiBtnStart.setOnClick(onStartClick);
+    guiBtnReset.setOnClick(onResetClick);
+}
+
+// ===== Dibuja cronómetro =====
+static void drawStopwatchScreen(tContext &context, uint32_t currentMs, bool running)
+{
+    tRectangle rectFull = {0, 0, 127, 127};
+    GrContextForegroundSet(&context, ClrBlack);
+    GrRectFill(&context, &rectFull);
+
+    uint32_t hour = currentMs / 3600000UL;
+    uint32_t minute = (currentMs / 60000UL) % 60UL;
+    uint32_t second = (currentMs / 1000UL) % 60UL;
+    uint32_t millisecond = currentMs % 1000UL;
+    if (hour > 99U) hour = 99U;
+
+    char str[20];
+    snprintf(str, sizeof(str), "%02u:%02u:%02u:%03u",
+             hour, minute, second, millisecond);
+
+    uint32_t screenW = GrContextDpyWidthGet(&context);
+    uint32_t screenH = GrContextDpyHeightGet(&context);
+
+    // Color del texto principal
+    GrContextForegroundSet(&context, running ? ClrYellow : ClrOlive);
+    GrStringDrawCentered(&context, str, -1, screenW / 2, screenH / 2 - 10, false);
+
+    // Estado
+    GrContextForegroundSet(&context, running ? ClrGreen : ClrRed);
+    GrStringDrawCentered(&context, running ? "RUNNING" : "STOPPED",
+                         -1, screenW / 2, screenH / 2 + 10, false);
+}
+
+// ===== Callbacks =====
+static void onStartClick()
+{
+    gRunning = !gRunning;
+    guiBtnStart.setLabel(gRunning ? "PAUSE" : "PLAY");
+}
+
+static void onResetClick()
+{
+    gStopwatchMs = 0;
+    gRunning = false;
+    guiBtnStart.setLabel("PLAY");
+}

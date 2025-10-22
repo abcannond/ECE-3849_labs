@@ -1,0 +1,326 @@
+/**
+ * Stopwatch Demo (GRLIB + Hardware Buttons)
+ * ------------------------------------------
+ * Hardware: TM4C1294XL + Crystalfontz 128x128 LCD
+ *
+ * S1 → Play / Pause
+ * S2 → Reset stopwatch
+ *
+ * This example uses pure GRLIB (no SimpleGUI).
+ * It demonstrates how to:
+ *   - Use physical buttons with polling & debounce
+ *   - Draw basic GUI elements on the LCD
+ *   - Manage timing using a hardware timer
+ *   - Implement a simple state machine for a stopwatch
+ *
+ */
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdio.h>
+
+// ===== Include C driverlib headers (wrapped in extern "C" for C++ builds) =====
+extern "C" {
+#include "driverlib/fpu.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/interrupt.h"
+#include "driSverlib/timer.h"
+#include "inc/hw_memmap.h"
+#include "Crystalfontz128x128_ST7735.h"
+#include "grlib/grlib.h"
+#include "sysctl_pll.h"
+}
+
+// ===== Custom helper libraries =====
+#include "button.h"       // Physical button FSM + debounce
+#include "timerLib.h"     // Hardware timer wrapper
+#include "elapsedTime.h"  // millis-style elapsed time utilities
+
+// ===== Global configuration =====
+static constexpr uint32_t BUTTON_TICK_MS      = 20U;   // Polling interval for buttons
+static constexpr uint32_t DISPLAY_REFRESH_MS  = 50U;   // Screen refresh interval (fps ≈ 20Hz)
+
+uint32_t gSystemClock = 0;          // Global system clock (Hz)
+volatile uint32_t gStopwatchMs = 0; // Stopwatch time in milliseconds
+volatile bool gRunning = false;     // Stopwatch running state
+
+// ============================================================================
+// STRUCT: Simple graphical button (for drawing only, not physical button)
+// ============================================================================
+struct MyButton {
+    int x, y, w, h;       // Position and size (pixels)
+    const char* label;    // Button text
+    bool pressed;         // Visual pressed state
+};
+
+// Define two on-screen buttons
+static MyButton btnStart = {8, 90, 50, 28, "PLAY", false};
+static MyButton btnReset = {70, 90, 50, 28, "RESET", false};
+
+// ============================================================================
+// Hardware Buttons
+// ============================================================================
+static Button btnPlayPause(S1);  // S1 → Play / Pause
+static Button btnResetHw(S2);    // S2 → Reset
+
+// ============================================================================
+// Function prototypes
+// ============================================================================
+static void configureSystemClock();
+static void initializeDisplay(tContext &context);
+static void configureTimer(Timer &timer);
+static void setupButtons();
+
+static void drawStopwatchScreen(tContext &context, uint32_t currentMs, bool running);
+static void drawButton(tContext &context, const MyButton &btn);
+
+static void onPlayPauseClick();
+static void onPlayPauseRelease();
+static void onResetClick();
+static void onResetRelease();
+
+// ============================================================================
+// MAIN PROGRAM
+// ============================================================================
+int main(void)
+{
+    // Disable interrupts during initialization
+    IntMasterDisable();
+
+    // Enable floating-point unit for faster math
+    FPUEnable();
+    FPULazyStackingEnable();
+
+    // 1. Configure system clock to 120 MHz
+    configureSystemClock();
+
+    // 2. Initialize display context
+    tContext sContext;
+    initializeDisplay(sContext);
+
+    // 3. Configure hardware timer for elapsedMillis utilities
+    Timer timer;
+    configureTimer(timer);
+
+    // Create elapsed-time helpers
+    elapsedMillis buttonTick(timer);
+    elapsedMillis displayTick(timer);
+    elapsedMillis stopwatchTick(timer);
+
+    // 4. Initialize hardware buttons
+    setupButtons();
+
+    // Enable global interrupts
+    IntMasterEnable();
+
+    // Previous states (for optimized redraw)
+    uint32_t lastDisplayedMs = static_cast<uint32_t>(-1);
+    bool lastRunning = !gRunning;
+
+    // ===========================
+    // Main application loop
+    // ===========================
+    while (true) {
+        // --- Poll hardware buttons every 20 ms ---
+        if (buttonTick >= BUTTON_TICK_MS) {
+            btnPlayPause.tick();
+            btnResetHw.tick();
+            buttonTick = 0;
+        }
+
+        // --- Handle Play/Pause button (S1) ---
+        if (btnPlayPause.wasPressed()) {
+            btnStart.pressed = true;
+            onPlayPauseClick();
+        }
+        if (btnPlayPause.wasReleased()) {
+            btnStart.pressed = false;
+            onPlayPauseRelease();
+        }
+
+        // --- Handle Reset button (S2) ---
+        if (btnResetHw.wasPressed()) {
+            btnReset.pressed = true;
+            onResetClick();
+        }
+        if (btnResetHw.wasReleased()) {
+            btnReset.pressed = false;
+            onResetRelease();
+        }
+
+        // --- Update stopwatch logic ---
+        if (gRunning) {
+            uint32_t delta = stopwatchTick;
+            if (delta > 0U) {
+                gStopwatchMs += delta; // accumulate time
+                stopwatchTick = 0;
+            }
+        } else {
+            stopwatchTick = 0;
+        }
+
+        // --- Redraw screen if time or state changed ---
+        uint32_t currentMs = gStopwatchMs;
+        bool running = gRunning;
+        if ((currentMs != lastDisplayedMs) || (running != lastRunning) ||
+            (displayTick >= DISPLAY_REFRESH_MS)) {
+
+            drawStopwatchScreen(sContext, currentMs, running);
+            drawButton(sContext, btnStart);
+            drawButton(sContext, btnReset);
+
+            #ifdef GrFlush
+            GrFlush(&sContext); // flush for double-buffered displays
+            #endif
+
+            // Save current states
+            lastDisplayedMs = currentMs;
+            lastRunning = running;
+            displayTick = 0;
+        }
+    }
+}
+
+// ============================================================================
+// System configuration functions
+// ============================================================================
+
+// --- Configure system clock to 120 MHz using PLL ---
+static void configureSystemClock()
+{
+    gSystemClock = SysCtlClockFreqSet(
+        SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN |
+        SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480,
+        120000000);
+}
+
+// --- Initialize LCD and graphics context ---
+static void initializeDisplay(tContext &context)
+{
+    Crystalfontz128x128_Init();
+    Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
+
+    GrContextInit(&context, &g_sCrystalfontz128x128);
+    GrContextFontSet(&context, &g_sFontFixed6x8);
+
+    // Clear screen (black background)
+    tRectangle full = {0, 0, 127, 127};
+    GrContextForegroundSet(&context, ClrBlack);
+    GrRectFill(&context, &full);
+    #ifdef GrFlush
+    GrFlush(&context);
+    #endif
+}
+
+// --- Initialize hardware timer base ---
+static void configureTimer(Timer &timer)
+{
+    timer.begin(gSystemClock, TIMER0_BASE);
+}
+
+// --- Setup physical button FSMs ---
+static void setupButtons()
+{
+    btnPlayPause.begin();
+    btnResetHw.begin();
+
+    btnPlayPause.setTickIntervalMs(BUTTON_TICK_MS);
+    btnResetHw.setTickIntervalMs(BUTTON_TICK_MS);
+
+    btnPlayPause.setDebounceMs(30);
+    btnResetHw.setDebounceMs(30);
+}
+
+// ============================================================================
+// Drawing functions
+// ============================================================================
+
+// --- Draw stopwatch text (time + status) ---
+static void drawStopwatchScreen(tContext &context, uint32_t currentMs, bool running)
+{
+    // Fill background
+    tRectangle rectFull = {0, 0, 127, 127};
+    GrContextForegroundSet(&context, ClrBlack);
+    GrRectFill(&context, &rectFull);
+
+    // Convert milliseconds into hh:mm:ss:ms
+    uint32_t hour = currentMs / 3600000UL;
+    uint32_t minute = (currentMs / 60000UL) % 60UL;
+    uint32_t second = (currentMs / 1000UL) % 60UL;
+    uint32_t millisecond = currentMs % 1000UL;
+    if (hour > 99U) hour = 99U;
+
+    // Build formatted string
+    char str[20];
+    snprintf(str, sizeof(str), "%02u:%02u:%02u:%03u",
+             hour, minute, second, millisecond);
+
+    // Center text on screen
+    uint32_t screenW = GrContextDpyWidthGet(&context);
+    uint32_t screenH = GrContextDpyHeightGet(&context);
+
+    // Draw time string
+    GrContextForegroundSet(&context, running ? ClrYellow : ClrOlive);
+    GrStringDrawCentered(&context, str, -1, screenW / 2, screenH / 2 - 10, false);
+
+    // Draw "RUNNING" or "STOPPED"
+    GrContextForegroundSet(&context, running ? ClrGreen : ClrRed);
+    GrStringDrawCentered(&context, running ? "RUNNING" : "STOPPED",
+                         -1, screenW / 2, screenH / 2 + 10, false);
+}
+
+// --- Draw simple button rectangle with label ---
+static void drawButton(tContext &context, const MyButton &btn)
+{
+    // Define colors based on button state
+    uint16_t bgColor = btn.pressed ? ClrBlack : ClrGray;
+    uint16_t textColor = btn.pressed ? ClrWhite : ClrBlack;
+    uint16_t borderColor = btn.pressed ? ClrWhite : ClrBlack;
+
+    // Draw background rectangle
+    tRectangle rect = {btn.x, btn.y, btn.x + btn.w - 1, btn.y + btn.h - 1};
+    GrContextForegroundSet(&context, bgColor);
+    GrRectFill(&context, &rect);
+
+    // Draw border
+    GrContextForegroundSet(&context, borderColor);
+    GrRectDraw(&context, &rect);
+
+    // Draw centered label text
+    GrContextForegroundSet(&context, textColor);
+    GrStringDrawCentered(&context, btn.label, -1,
+                         btn.x + btn.w / 2, btn.y + btn.h / 2, false);
+}
+
+// ============================================================================
+// Button callback handlers
+// ============================================================================
+
+// --- When S1 is pressed ---
+static void onPlayPauseClick()
+{
+    // Toggle stopwatch running state
+    gRunning = !gRunning;
+    btnStart.label = gRunning ? "PAUSE" : "PLAY";
+}
+
+// --- When S1 is released ---
+static void onPlayPauseRelease()
+{
+    // Optional: Add vibration, LED, or sound feedback here
+}
+
+// --- When S2 is pressed ---
+static void onResetClick()
+{
+    // Reset stopwatch time and state
+    gStopwatchMs = 0;
+    gRunning = false;
+    btnStart.label = "PLAY";
+}
+
+// --- When S2 is released ---
+static void onResetRelease()
+{
+    // Optional: Add feedback or animation here
+}
