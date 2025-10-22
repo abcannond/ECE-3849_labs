@@ -31,6 +31,12 @@ uint32_t gSystemClock = 0;
 volatile uint32_t gStopwatchMs = 0;
 volatile bool gRunning = false;
 
+//Time
+uint32_t currentMs;
+uint32_t currentSec;
+uint32_t currentMin;
+uint32_t currentHr;
+
 // ============================================================================
 // STRUCT: Simple GUI Button (for drawing)
 // ============================================================================
@@ -41,12 +47,14 @@ struct MyButton {
 };
 
 // One on-screen button: Play / Pause
-static MyButton btnStart = {39, 80, 50, 28, "PLAY", false};
+static MyButton btnStart = {15, 80, 50, 28, "PLAY", false};
+static MyButton btnClear = {70, 80, 50, 28, "RESET", false};
 
 // ============================================================================
 // Hardware button
 // ============================================================================
 static Button btnPlayPause(S1);  // S1 → Play/Pause
+static Button btnReset(S2); //S2 -> Reset
 
 // ============================================================================
 // Function prototypes
@@ -54,11 +62,12 @@ static Button btnPlayPause(S1);  // S1 → Play/Pause
 static void initializeDisplay(tContext &context);
 static void configureTimer(Timer &timer);
 static void setupButtons();
-static void drawStopwatchScreen(tContext &context, uint32_t currentMs, uint32_t currentS, uint32_t currentM, uint32_t currentHr, bool running);
+static void drawStopwatchScreen(tContext &context, uint32_t currentHr, uint32_t currentMin, uint32_t currentS, uint32_t currentMs, bool running);
 static void drawButton(tContext &context, const MyButton &btn);
 
 static void onPlayPauseClick();
 static void onPlayPauseRelease();
+static void onResetClick();
 
 // ============================================================================
 // MAIN PROGRAM
@@ -103,6 +112,14 @@ int main(void)
             btnStart.pressed = false;
             onPlayPauseRelease();
         }
+        //--- Handle Reset button ---
+        if (btnReset.wasPressed()){
+            btnClear.pressed = true;
+            onResetClick();
+        }
+        if(btnReset.wasReleased()){
+            btnClear.pressed = false;
+        }
 
         // --- Stopwatch logic ---
         if (gRunning) {
@@ -111,15 +128,17 @@ int main(void)
                 gStopwatchMs += delta;
                 stopwatchTick = 0;
             }
+            GrStringDrawCentered(&sContext, "Running", -1, 64, 64, false);
         } else {
             stopwatchTick = 0;
+            GrStringDrawCentered(&sContext, "Stopped", -1, 64, 64, false);
         }
 
         // --- Update screen if needed ---
-        uint32_t currentMs = gStopwatchMs % 1000U;
-        uint32_t currentSec = gStopwatchMs / 1000U;
-        uint32_t currentMin = currentSec / 60U;
-        uint32_t currentHr = currentMin / 60U;
+        currentMs = gStopwatchMs % 1000U;
+        currentSec = (gStopwatchMs / 1000U) % 60U;
+        currentMin = (gStopwatchMs / 60000U) % 60U;
+        currentHr = 0; //(gStopwatchMs / 3600000U);
 
         if ((currentSec != lastDisplayedSec) ||
             (gRunning != lastRunning) ||
@@ -127,6 +146,7 @@ int main(void)
 
             drawStopwatchScreen(sContext, currentHr, currentMin, currentSec, currentMs, gRunning);
             drawButton(sContext, btnStart);
+            drawButton(sContext, btnClear);
 
             #ifdef GrFlush
             GrFlush(&sContext);
@@ -165,6 +185,10 @@ static void setupButtons()
     btnPlayPause.begin();
     btnPlayPause.setTickIntervalMs(BUTTON_TICK_MS);
     btnPlayPause.setDebounceMs(30);
+
+    btnReset.begin();
+    btnReset.setTickIntervalMs(BUTTON_TICK_MS);
+    btnReset.setDebounceMs(30);
 }
 
 // ============================================================================
@@ -180,9 +204,24 @@ static void drawStopwatchScreen(tContext &context, uint32_t currentHr, uint32_t 
     GrContextForegroundSet(&context, ClrCyan);
     GrStringDrawCentered(&context, "STOPWATCH", -1, 64, 15, false);
 
+    // Write "Running" or "Stopped"
+    if (running)
+    {
+        GrContextForegroundSet(&context, ClrCyan);
+        GrStringDrawCentered(&context, "Running", -1, 64, 30, false);
+    }
+    else
+    {
+        GrContextForegroundSet(&context, ClrCyan);
+        GrStringDrawCentered(&context, "Stopped", -1, 64, 30, false);
+    }
+
     // Draw seconds counter centered
-    char str[20];
-    snprintf(str, sizeof(str), "%02u : %02u : %02u : %02u", currentHr, currentMin, currentSec, currentMs);
+    char str[32];
+//    snprintf(str, sizeof(str), "%02u:%02u:%02u:%03", currentHr, currentMin, currentSec, currentMs);
+    snprintf(str, sizeof(str), "%02u:%02u:%02u:%03u",
+             (unsigned)currentHr, (unsigned)currentMin,
+             (unsigned)currentSec, (unsigned)currentMs);
 
     GrContextForegroundSet(&context, running ? ClrYellow : ClrOlive);
     GrStringDrawCentered(&context, str, -1, 64, 50, false);
@@ -217,4 +256,13 @@ static void onPlayPauseClick()
 static void onPlayPauseRelease()
 {
     // Optional visual or sound feedback
+}
+
+static void onResetClick()
+{
+    //Set time on screen to 0
+    currentHr = 0;
+    currentMin = 0;
+    currentSec = 0;
+    currentMs = 0;
 }
