@@ -25,7 +25,7 @@ extern "C" {
 
 // ===== Global configuration =====
 static constexpr uint32_t BUTTON_TICK_MS     = 20U;
-static constexpr uint32_t DISPLAY_REFRESH_MS = 50U;
+static constexpr uint32_t DISPLAY_REFRESH_MS = 16U;
 
 uint32_t gSystemClock = 0;
 volatile uint32_t gStopwatchMs = 0;
@@ -100,6 +100,7 @@ int main(void)
         // --- Poll physical button ---
         if (buttonTick >= BUTTON_TICK_MS) {
             btnPlayPause.tick();
+            btnReset.tick();
             buttonTick = 0;
         }
 
@@ -135,10 +136,30 @@ int main(void)
         }
 
         // --- Update screen if needed ---
-        currentMs = gStopwatchMs % 1000U;
-        currentSec = (gStopwatchMs / 1000U) % 60U;
-        currentMin = (gStopwatchMs / 60000U) % 60U;
-        currentHr = 0; //(gStopwatchMs / 3600000U);
+        currentMs = gStopwatchMs;
+        if (currentMs >= 1000){
+            currentSec += 1;
+            gStopwatchMs = 0;
+        }
+
+        if (currentSec >= 60){
+            currentMin += 1;
+            currentSec = 0;
+        }
+
+        if (currentMin >= 60){
+            currentHr += 1;
+            currentMin = 0;
+        }
+        if (currentHr >= 100){
+            gStopwatchMs = 0;
+            currentMs = 0;
+            currentSec = 0;
+            currentMin = 0;
+            currentHr = 0;
+        }
+
+        currentMs = currentMs % 1000;
 
         if ((currentSec != lastDisplayedSec) ||
             (gRunning != lastRunning) ||
@@ -265,4 +286,6 @@ static void onResetClick()
     currentMin = 0;
     currentSec = 0;
     currentMs = 0;
+
+    gStopwatchMs = 0;
 }
